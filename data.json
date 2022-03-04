@@ -1,0 +1,5 @@
+{
+    "prefix": ".",
+    "intents": ["guilds", "members", "messages"],
+    "extensions": ["server", "game_cog", "misc_cog"]
+}
