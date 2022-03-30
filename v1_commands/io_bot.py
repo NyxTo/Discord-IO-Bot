@@ -31,7 +31,7 @@ class IOBot(Bot):
         self.servers.pop(guild.id)
     
 
-def main():
+if __name__ == '__main__':
     with open("data.json", 'r') as file:
         data = json.load(file)
     IOBot(data).run(token)
