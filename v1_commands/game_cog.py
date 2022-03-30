@@ -148,32 +148,6 @@ class Game(Cog):
             server.winners.add(ctx.author.id)
         await ctx.send(f"Your submission is {'correct, you win the game!' if correct else 'wrong.'}")
     
-    
-    @dm_only()
-    @command(aliases=["past", "vp"], brief="List your past queries/guesses/submissions")
-    async def view_past(self, ctx):
-        guild = self.bot.choices.get(ctx.author.id)
-        if guild is None:
-            await ctx.send(NOT_CHSN.format(pfx=ctx.prefix))
-            return
-        server = self.bot.servers[guild.id]
-        if server.arity == -1:
-            await ctx.send(RUNNING.format(whether="no", what=f"your chosen server {tools.fmt_guild(guild)}"))
-            return
-        await ctx.send(VP_FMT.format(
-            query_tbl=tabulate([(', '.join(map(str, entry['args'])), entry['result']) for entry in server.queries.get(ctx.author.id, [])], ["Arguments", "Result"], tools.TBL_FMT),
-            guess_tbl=tabulate([(', '.join(map(str, entry['args'])), entry['value'], EMOJI['tick' if entry['correct'] else 'cross']) for entry in server.guesses.get(ctx.author.id, [])], ["Arguments", "Value", ''], tools.TBL_FMT),
-            sbmxn_tbl=tabulate([(', '.join(entry['params']), entry['expr'], EMOJI['tick' if entry['correct'] else 'cross']) for entry in server.submxns.get(ctx.author.id, [])], ["Parameters", "Expression", ''], tools.TBL_FMT)))
-    
-    @check(tools.has_ctrl)
-    @command(aliases=["lead", "lb"], brief="See the current game points leaderboard")
-    async def leaderboard(self, ctx):
-        server = self.bot.servers[ctx.guild.id]
-        if server.arity == -1:
-            await ctx.send(RUNNING.format(whether="no", what="this server"))
-            return
-        await ctx.send(tbl_lb(server))
-    
 
 def ask(bot, author, pfx, qsn, **kwargs):
     guild = bot.choices.get(author.id)
